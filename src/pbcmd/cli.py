@@ -1,4 +1,5 @@
 """CLI interface."""
+# pylint: disable=import-self,unused-import,unexpected-keyword-arg
 
 import click_completion
 
@@ -8,6 +9,7 @@ import pbcmd.hello
 import pbcmd.calc
 import pbcmd.proxy
 import pbcmd.timefmt
+import pbcmd.git
 
 if __name__ == "__main__":
     click_completion.init()
