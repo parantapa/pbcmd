@@ -58,4 +58,4 @@ def rm_timestamped(directory, prefix, suffix, delete_after, delete_before, dry_r
                     fname.unlink()
 
     click.secho("Found %d files" % n_files, color="green")
-    click.secho("Deleted %d files" % n_files, color="green")
+    click.secho("Deleted %d files" % n_deleted, color="green")
