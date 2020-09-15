@@ -19,11 +19,11 @@ from . import cli
               type=str,
               required=True,
               help="Suffix of the files to be removed.")
-@click.option("-df", "--delete-after",
+@click.option("-da", "--delete-after",
               type=int,
               required=True,
               help="Only delete files with timestamp after this time (inclusive).")
-@click.option("-df", "--delete-before",
+@click.option("-db", "--delete-before",
               type=int,
               required=True,
               help="Only delete files with timestamp before this time (exclusive). ")
