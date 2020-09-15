@@ -12,6 +12,7 @@ import pbcmd.timefmt
 import pbcmd.git
 import pbcmd.pyon2json
 import pbcmd.csplit
+import pbcmd.rm_timestamped
 
 if __name__ == "__main__":
     click_completion.init()
