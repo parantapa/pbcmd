@@ -12,7 +12,9 @@ import pbcmd.timefmt
 import pbcmd.git
 import pbcmd.pyon2json
 import pbcmd.csplit
-import pbcmd.rm_timestamped
+# import pbcmd.rm_timestamped
+import pbcmd.obscure
+import pbcmd.mail
 
 if __name__ == "__main__":
     click_completion.init()
