@@ -18,7 +18,6 @@ def proxy(port, host):
         "-o", "ServerAliveInterval 10",
         "-o", "ServerAliveCountMax 3",
         "-o", "ExitOnForwardFailure=yes",
-        "-v",
         "-N",
         "-S", "none",
         "-D", f"127.0.0.1:{port}",
