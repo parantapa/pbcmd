@@ -195,7 +195,8 @@ def sync():
 @click.option(
     "-r",
     "--remote-branch",
-    default="rsync-master",
+    type=str,
+    default="",
     help="Branch to use to commit remote repository",
 )
 @click.option(
@@ -206,6 +207,13 @@ def rsync(remote_branch, push_only, remote_dir):
     """Sync local repository with a remote directory."""
     if not remote_dir.endswith("/"):
         remote_dir += "/"
+
+    if not remote_branch:
+        remote_branch = remote_dir
+        remote_branch = [c if c.isalnum() else "_" for c in remote_branch]
+        remote_branch = "".join(remote_branch)
+        remote_branch = remote_branch.strip("_")
+        secho("Using remote branch %s" % remote_branch, fg="green")
 
     try:
         check_git_repo_top_dir()
