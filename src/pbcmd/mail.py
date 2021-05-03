@@ -12,14 +12,30 @@ from .obscure import text_unobscure
 
 
 @cli.command()
-@click.option("-a", "--auth-file", required=True, help="Authentication file.")
+@click.option(
+    "-a",
+    "--auth-file",
+    required=True,
+    type=click.Path(exists=True, file_okay=True, dir_okay=False),
+    help="Authentication file.",
+)
 @click.option("-t", "--to", type=str, required=True, help="Recipient email address.")
 @click.option("-s", "--subject", required=True, help="Subject of the email.")
 @click.option(
-    "-b", "--body-file", default=None, help="Text file containing body of the email."
+    "-b",
+    "--body-file",
+    type=click.Path(exists=True, file_okay=True, dir_okay=False),
+    default="-",
+    show_default=True,
+    help="Text file containing body of the email.",
 )
 def mail(auth_file, to, subject, body_file):
-    """Send an email."""
+    """Send an email.
+
+    Authentication file should be an obscured json file,
+    containing the following fields:
+    server, port, username, password, and sender_email
+    """
     with open(auth_file, "rt") as fobj:
         auth = fobj.read()
         auth = text_unobscure(auth)
