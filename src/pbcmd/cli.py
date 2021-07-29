@@ -1,8 +1,6 @@
 """CLI interface."""
 # pylint: disable=import-self,unused-import,unexpected-keyword-arg
 
-import click_completion
-
 from . import cli
 
 import pbcmd.hello
@@ -17,5 +15,4 @@ import pbcmd.obscure
 import pbcmd.mail
 
 if __name__ == "__main__":
-    click_completion.init()
     cli(prog_name="pb")
