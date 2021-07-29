@@ -7,7 +7,6 @@ from subprocess import run, PIPE, DEVNULL
 
 import click
 from click import secho
-from . import cli
 
 
 def commit_uncommited():
@@ -162,7 +161,7 @@ def is_ahead(a, b):
     return False
 
 
-@cli.group()
+@click.group()
 def git():
     """Git helper commands."""
 
@@ -199,11 +198,8 @@ def sync():
     default="",
     help="Branch to use to commit remote repository",
 )
-@click.option(
-    "-f", "--push-only", is_flag=True, help="If True overwrite the remote directory"
-)
 @click.argument("remote_dir")
-def rsync(remote_branch, push_only, remote_dir):
+def rsync(remote_branch, remote_dir):
     """Sync local repository with a remote directory."""
     if not remote_dir.endswith("/"):
         remote_dir += "/"
@@ -221,24 +217,19 @@ def rsync(remote_branch, push_only, remote_dir):
 
         commit_uncommited()
 
-        if push_only:
-            rsync_push(remote_dir)
-            return
-
         checkout_branch(remote_branch)
-        rsync_pull(remote_dir)
-        commit_uncommited()
-
-        checkout_branch(branch)
-        merge_ff_only(remote_branch)
-
-        checkout_branch(remote_branch)
-        merge_ff_only(branch)
+        try:
+            rsync_pull(remote_dir)
+            commit_uncommited()
+        finally:
+            checkout_branch(branch)
 
         rsync_push(remote_dir)
-
-        checkout_branch(branch)
 
         secho("Rsync completed successfully", fg="green")
     except RuntimeError as e:
         secho(str(e), fg="red")
+
+
+if __name__ == "__main__":
+    git()
