@@ -5,8 +5,6 @@ from pathlib import Path
 
 import click
 
-from . import cli
-
 
 def do_pyon2json(ifname, ofname, pretty=True):
     """Convert the python object notation file to json object notation file."""
@@ -24,7 +22,7 @@ def do_pyon2json(ifname, ofname, pretty=True):
         fout.write(x)
 
 
-@cli.command()
+@click.command()
 @click.option("-i", "--input", "ifname", type=str, default=None, help="Input file name")
 @click.option(
     "-o", "--output", "ofname", type=str, default=None, help="Output file name"
@@ -58,3 +56,7 @@ def pyon2json(ifname, ofname, suffix, pretty, files):
 
     for ifname, ofname in zip(ifnames, ofnames):
         do_pyon2json(ifname, ofname, pretty)
+
+
+if __name__ == "__main__":
+    pyon2json()

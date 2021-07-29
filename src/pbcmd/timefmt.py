@@ -5,10 +5,8 @@ from datetime import datetime, timezone
 import click
 from dateutil.parser import isoparse
 
-from . import cli
 
-
-@cli.command()
+@click.command()
 @click.argument("time")
 def timefmt(time):
     """Convert between UTC ISO8601 datetime string and Unix timestamp."""
@@ -26,3 +24,7 @@ def timefmt(time):
 
     click.secho("Date: %s" % time.isoformat(), fg="green")
     click.secho("Timestamp: %s" % time.timestamp(), fg="yellow")
+
+
+if __name__ == "__main__":
+    timefmt()

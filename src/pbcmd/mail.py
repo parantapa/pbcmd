@@ -7,11 +7,10 @@ import smtplib
 
 import click
 
-from . import cli
 from .obscure import text_unobscure
 
 
-@cli.command()
+@click.command()
 @click.option(
     "-a",
     "--auth-file",
@@ -61,3 +60,7 @@ def mail(auth_file, to, subject, body_file):
         server.sendmail(auth["sender_email"], [to], message)
 
     click.secho("Email sent successfully", fg="green")
+
+
+if __name__ == "__main__":
+    mail()

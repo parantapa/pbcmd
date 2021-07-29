@@ -4,7 +4,6 @@ import zlib
 from base64 import urlsafe_b64encode, urlsafe_b64decode
 
 import click
-from . import cli
 
 
 def text_obscure(data):
@@ -25,7 +24,7 @@ def text_unobscure(data):
     return data
 
 
-@cli.command()
+@click.command()
 @click.option(
     "-i",
     "--inplace",
@@ -52,7 +51,7 @@ def obscure(inplace, output, input):
         fobj.write(data)
 
 
-@cli.command()
+@click.command()
 @click.option(
     "-i",
     "--inplace",

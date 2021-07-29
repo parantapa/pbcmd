@@ -1,18 +1,36 @@
 """CLI interface."""
-# pylint: disable=import-self,unused-import,unexpected-keyword-arg
 
-from . import cli
+import click
 
-import pbcmd.hello
-import pbcmd.calc
-import pbcmd.proxy
-import pbcmd.timefmt
-import pbcmd.git
-import pbcmd.pyon2json
-import pbcmd.csplit
-# import pbcmd.rm_timestamped
-import pbcmd.obscure
-import pbcmd.mail
+from .hello import hello
+from .calc import calc
+from .proxy import proxy
+from .timefmt import timefmt
+from .git import git
+from .pyon2json import pyon2json
+from .csplit import csplit
+
+# from .rm_timestamped import rm_timestamped
+from .obscure import obscure, unobscure
+from .mail import mail
+
+
+@click.group()
+def cli():
+    """PB's command line tools."""
+
+
+cli.add_command(hello)
+cli.add_command(calc)
+cli.add_command(proxy)
+cli.add_command(timefmt)
+cli.add_command(git)
+cli.add_command(pyon2json)
+cli.add_command(csplit)
+# cli.add_command(rm_timestamped)
+cli.add_command(obscure)
+cli.add_command(unobscure)
+cli.add_command(mail)
 
 if __name__ == "__main__":
     cli(prog_name="pb")
