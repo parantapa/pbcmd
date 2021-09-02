@@ -137,7 +137,10 @@ class GlobalConfig(BaseModel):
 @click.command()
 @click.argument("to", type=str, default="")
 def cpush(to: str):
-    """Push code to remote directory."""
+    """Push code to remote directory.
+
+    pb cpush <remote>
+    """
     try:
         gconfig = GLOBAL_CONFIG_FILE.read_text()
         gconfig = json5.loads(gconfig)
