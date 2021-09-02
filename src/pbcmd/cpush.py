@@ -124,6 +124,7 @@ def find_config(cwd: Path) -> Path:
 class LocalConfig(BaseModel):
     """Local configuration."""
 
+    project: str
     remotes: dict[str, RemotePath]
 
 
@@ -163,8 +164,8 @@ def cpush(to: str):
         click.secho(f"Using remote: {remote}", fg="yellow")
 
         remote_dir = lconfig.remotes[remote]
-        backup_dir = gconfig.backup_dir / remote / "remote_backup"
-        borg_repo = gconfig.backup_dir / remote / "borg_repo"
+        backup_dir = gconfig.backup_dir / lconfig.project / remote / "remote_backup"
+        borg_repo = gconfig.backup_dir / lconfig.project / remote / "borg_repo"
 
         borg_repo = cast(BorgRepo, borg_repo)
 
