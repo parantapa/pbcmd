@@ -12,7 +12,7 @@ import click
 from pydantic import BaseModel, ValidationError
 from pydantic.types import DirectoryPath
 
-LOCAL_CONFIG_FILE = ".cpush.json"
+LOCAL_CONFIG_FILE = ".cpush.json5"
 GLOBAL_CONFIG_FILE = Path("~/.config/cpush/cpush.json").expanduser()
 ROOT = Path("/")
 
