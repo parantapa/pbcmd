@@ -168,7 +168,7 @@ def cpush(to: str):
 
         remote_dir = lconfig.remotes[remote]
         backup_dir = gconfig.backup_dir / lconfig.project / remote / "remote_backup"
-        borg_repo = gconfig.backup_dir / lconfig.project / remote / "borg_repo"
+        borg_repo = gconfig.backup_dir / lconfig.project / "borg_repo"
 
         borg_repo = cast(BorgRepo, borg_repo)
 
@@ -181,7 +181,7 @@ def cpush(to: str):
 
         borg_create(f"local-{now}", project_dir, borg_repo)
         rsync_pull(remote_dir, backup_dir)
-        borg_create(f"remote-{now}", backup_dir, borg_repo)
+        borg_create(f"{remote}-{now}", backup_dir, borg_repo)
         borg_prune(borg_repo)
         rsync_push(remote_dir, project_dir)
 
