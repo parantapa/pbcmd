@@ -1,5 +1,36 @@
 [build-system]
-requires = ["setuptools", "wheel", "setuptools_scm[toml]>=3.4"]
+requires = ["setuptools>=61.0"]
 build-backend = "setuptools.build_meta"
 
-[tool.setuptools_scm]
+[project]
+name = "pbcmd"
+version = "5.0"
+authors = [
+  { name="Parantapa Bhattacharya", email="pb+pypi@parantapa.net" },
+]
+description = "PB's miscellaneous command line tools."
+license = {text = "MIT"}
+
+readme = "README.rst"
+requires-python = ">=3.10"
+
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+
+dependencies = [
+    "click",
+    "python-dateutil",
+    "wasabi",
+    "tqdm",
+    "pydantic",
+    "json5",
+]
+
+[project.urls]
+"Homepage" = "https://github.com/parantapa/pbcmd"
+
+[project.scripts]
+pb = "pbcmd.cli:cli"
