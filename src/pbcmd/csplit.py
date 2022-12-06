@@ -12,6 +12,17 @@ COMP_OPEN = {"gzip": gzip.open, "bz2": bz2.open, "xz": lzma.open, "text": open}
 COMP_OPTION_TYPE = click.Choice(list(COMP_OPEN) + ["infer"])
 
 
+def infer_compression(fname: str) -> str:
+    if fname.endswith(".gz"):
+        return "gzip"
+    elif fname.endswith(".bz2"):
+        return "bz2"
+    elif fname.endswith(".xz"):
+        return "xz"
+    else:
+        return "text"
+
+
 @click.command()
 @click.option(
     "-n",
@@ -59,24 +70,10 @@ def csplit(
     index of output files start from 0
     """
     if input_compression == "infer":
-        if input_file.endswith(".gz"):
-            input_compression = "gzip"
-        elif input_file.endswith(".bz2"):
-            input_compression = "bz2"
-        elif input_file.endswith(".xz"):
-            input_compression = "xz"
-        else:
-            input_compression = "text"
+        input_compression = infer_compression(input_file)
 
     if output_compression == "infer":
-        if output_file_format.endswith(".gz"):
-            output_compression = "gzip"
-        elif output_file_format.endswith(".bz2"):
-            output_compression = "bz2"
-        elif output_file_format.endswith(".xz"):
-            output_compression = "xz"
-        else:
-            output_compression = "text"
+        output_compression = infer_compression(output_file_format)
 
     if "{index}" not in output_file_format:
         raise click.UsageError("Output file format string doesn't contain '{index}'")
