@@ -134,8 +134,33 @@ class GlobalConfig(BaseModel):
     backup_dir: DirectoryPath
 
 
+def do_cpush(
+    gconfig: GlobalConfig, lconfig: LocalConfig, remote: str, project_dir: Path
+):
+    click.secho(f"Using remote: {remote}", fg="yellow")
+
+    remote_dir = lconfig.remotes[remote]
+    backup_dir = gconfig.backup_dir / lconfig.project / remote / "remote_backup"
+    borg_repo = gconfig.backup_dir / lconfig.project / "borg_repo"
+
+    borg_repo = cast(BorgRepo, borg_repo)
+
+    if not backup_dir.is_dir():
+        backup_dir.mkdir(0o700, parents=True, exist_ok=True)
+    if not borg_repo.is_dir():
+        borg_init(borg_repo)
+
+    now = datetime.now().replace(microsecond=0).isoformat()
+
+    borg_create(f"local-{now}", project_dir, borg_repo)
+    rsync_pull(remote_dir, backup_dir)
+    borg_create(f"{remote}-{now}", backup_dir, borg_repo)
+    borg_prune(borg_repo)
+    rsync_push(remote_dir, project_dir)
+
+
 @click.command()
-@click.argument("to", type=str, default="")
+@click.argument("to", type=str, default="ALL")
 def cpush(to: str):
     """Push code to remote directory.
 
@@ -153,37 +178,25 @@ def cpush(to: str):
         lconfig = json5.loads(lconfig)
         lconfig = LocalConfig.parse_obj(lconfig)
 
-        if to == "":
-            if len(lconfig.remotes) == 1:
-                remote = list(lconfig.remotes.keys())[0]
-            else:
-                raise click.UsageError("Multiple remotes available; must specify one.")
+        if to == "ALL":
+            for remote in list(lconfig.remotes.keys()):
+                do_cpush(
+                    gconfig=gconfig,
+                    lconfig=lconfig,
+                    remote=remote,
+                    project_dir=project_dir,
+                )
         else:
             if to in lconfig.remotes:
                 remote = to
+                do_cpush(
+                    gconfig=gconfig,
+                    lconfig=lconfig,
+                    remote=remote,
+                    project_dir=project_dir,
+                )
             else:
                 raise click.UsageError(f"Remote {to} not defined in local config.")
-
-        click.secho(f"Using remote: {remote}", fg="yellow")
-
-        remote_dir = lconfig.remotes[remote]
-        backup_dir = gconfig.backup_dir / lconfig.project / remote / "remote_backup"
-        borg_repo = gconfig.backup_dir / lconfig.project / "borg_repo"
-
-        borg_repo = cast(BorgRepo, borg_repo)
-
-        if not backup_dir.is_dir():
-            backup_dir.mkdir(0o700, parents=True, exist_ok=True)
-        if not borg_repo.is_dir():
-            borg_init(borg_repo)
-
-        now = datetime.now().replace(microsecond=0).isoformat()
-
-        borg_create(f"local-{now}", project_dir, borg_repo)
-        rsync_pull(remote_dir, backup_dir)
-        borg_create(f"{remote}-{now}", backup_dir, borg_repo)
-        borg_prune(borg_repo)
-        rsync_push(remote_dir, project_dir)
 
         click.secho("Code push finished completed successfully", fg="green")
     except (RuntimeError, FileNotFoundError, ValidationError) as e:
