@@ -84,6 +84,7 @@ def rsync_pull(remote_dir: RemotePath, local_dir: Path):
             --verbose
             --compress
             --delete
+            --exclude 'core.*'
             '{remote_dir_es}'
             '{local_dir_es}'
         """
@@ -103,6 +104,7 @@ def rsync_push(remote_dir: RemotePath, local_dir: Path):
             --verbose
             --compress
             --delete
+            --exclude '.git/'
             '{local_dir_es}'
             '{remote_dir_es}'
         """
