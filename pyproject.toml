@@ -23,7 +23,8 @@ dependencies = [
     "wasabi",
     "tqdm",
     "pydantic",
-    "json5"
+    "json5",
+    "pandas"
 ]
 
 [project.urls]
