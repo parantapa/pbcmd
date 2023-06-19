@@ -10,6 +10,7 @@ from .git import git
 from .pyon2json import pyon2json
 from .csplit import csplit
 from .cpush import cpush
+from .pqcat import pqcat
 
 # from .rm_timestamped import rm_timestamped
 from .obscure import obscure, unobscure
@@ -33,6 +34,7 @@ cli.add_command(cpush)
 cli.add_command(obscure)
 cli.add_command(unobscure)
 cli.add_command(mail)
+cli.add_command(pqcat)
 
 if __name__ == "__main__":
     cli(prog_name="pb")

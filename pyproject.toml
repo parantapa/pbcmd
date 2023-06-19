@@ -24,7 +24,8 @@ dependencies = [
     "tqdm",
     "pydantic",
     "json5",
-    "pandas"
+    "pandas",
+    "pyarrow"
 ]
 
 [project.urls]
