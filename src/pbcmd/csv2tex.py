@@ -2,7 +2,7 @@
 
 import re
 from pathlib import Path
-from typing import Optional
+from typing import Optional, Any
 
 import click
 import jinja2
@@ -35,7 +35,8 @@ def get_default_ofname(tfname: Path) -> Path:
 
 
 # https://stackoverflow.com/questions/16259923/how-can-i-escape-latex-special-characters-inside-django-templates
-def escape_tex(text: str) -> str:
+def escape_tex(text: Any) -> str:
+    text = str(text)
     conv = {
         "&": r"\&",
         "%": r"\%",
@@ -81,7 +82,7 @@ def csv2tex(ifname: Optional[Path], ofname: Optional[Path], tfname: Path):
         trim_blocks=True,
         undefined=jinja2.StrictUndefined,
     )
-    env.filters["escape_tex"] = escape_tex
+    env.filters["escape"] = escape_tex
 
     template = tfname.read_text()
     template = env.from_string(template)
