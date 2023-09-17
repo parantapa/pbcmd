@@ -65,6 +65,7 @@ def escape_tex(text: Any) -> str:
 @click.option("-o", "--output", "ofname", type=File, help="Output file")
 @click.argument("tfname", metavar="FILE", type=ExistingFile)
 def csv2tex(ifname: Optional[Path], ofname: Optional[Path], tfname: Path):
+    """Use data from a csv file to create a TeX table."""
     if ifname is None:
         ifname = get_default_ifname(tfname)
     if ofname is None:
