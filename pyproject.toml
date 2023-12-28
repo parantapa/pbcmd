@@ -27,7 +27,8 @@ dependencies = [
     "pandas",
     "pyarrow",
     "attrs",
-    "cattrs"
+    "cattrs",
+    "jinja2"
 ]
 
 [project.urls]
