@@ -28,7 +28,8 @@ dependencies = [
     "pyarrow",
     "attrs",
     "cattrs",
-    "jinja2"
+    "jinja2",
+    "platformdirs",
 ]
 
 [project.urls]

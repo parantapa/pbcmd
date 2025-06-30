@@ -10,11 +10,11 @@ from subprocess import run, CalledProcessError
 import json5
 import click
 from pydantic import BaseModel, ValidationError
-from pydantic.types import DirectoryPath
+from platformdirs import user_cache_path
 
 LOCAL_CONFIG_FILE = ".cpush.json5"
-GLOBAL_CONFIG_FILE = Path("~/.config/cpush/cpush.json").expanduser()
 ROOT = Path("/")
+BACKUP_DIR = user_cache_path("pb_cpush")
 
 
 RemotePath = NewType("RemotePath", str)
@@ -130,20 +130,17 @@ class LocalConfig(BaseModel):
     remotes: dict[str, RemotePath]
 
 
-class GlobalConfig(BaseModel):
-    """Global configuration."""
-
-    backup_dir: DirectoryPath
-
-
 def do_cpush(
-    gconfig: GlobalConfig, lconfig: LocalConfig, remote: str, project_dir: Path
+    lconfig: LocalConfig, remote: str, project_dir: Path
 ):
+    if not BACKUP_DIR.exists():
+        BACKUP_DIR.mkdir(parents=True)
+
     click.secho(f"Using remote: {remote}", fg="yellow")
 
     remote_dir = lconfig.remotes[remote]
-    backup_dir = gconfig.backup_dir / lconfig.project / remote / "remote_backup"
-    borg_repo = gconfig.backup_dir / lconfig.project / "borg_repo"
+    backup_dir = BACKUP_DIR / lconfig.project / remote / "remote_backup"
+    borg_repo = BACKUP_DIR / lconfig.project / "borg_repo"
 
     borg_repo = cast(BorgRepo, borg_repo)
 
@@ -169,21 +166,16 @@ def cpush(to: str):
     pb cpush <remote>
     """
     try:
-        gconfig = GLOBAL_CONFIG_FILE.read_text()
-        gconfig = json5.loads(gconfig)
-        gconfig = GlobalConfig.parse_obj(gconfig)
-
         lconfig = find_config(Path.cwd())
         project_dir = lconfig.parent
 
         lconfig = lconfig.read_text()
         lconfig = json5.loads(lconfig)
-        lconfig = LocalConfig.parse_obj(lconfig)
+        lconfig = LocalConfig.model_validate(lconfig)
 
         if to == "ALL":
             for remote in list(lconfig.remotes.keys()):
                 do_cpush(
-                    gconfig=gconfig,
                     lconfig=lconfig,
                     remote=remote,
                     project_dir=project_dir,
@@ -192,7 +184,6 @@ def cpush(to: str):
             if to in lconfig.remotes:
                 remote = to
                 do_cpush(
-                    gconfig=gconfig,
                     lconfig=lconfig,
                     remote=remote,
                     project_dir=project_dir,
