@@ -76,6 +76,7 @@ def rsync_pull(remote_dir: RemotePath, local_dir: Path):
 
     remote_dir_es = ensure_endslash(remote_dir)
     local_dir_es = ensure_endslash(local_dir)
+    cvsignore = Path("~/.cvsignore").expanduser()
 
     cmd = f"""
         rsync
@@ -85,6 +86,7 @@ def rsync_pull(remote_dir: RemotePath, local_dir: Path):
             --delete
             --exclude='.git/'
             --filter=':- .gitignore'
+            --filter=':- {cvsignore}'
             '{remote_dir_es}'
             '{local_dir_es}'
         """
@@ -97,6 +99,7 @@ def rsync_push(remote_dir: RemotePath, local_dir: Path):
 
     remote_dir_es = ensure_endslash(remote_dir)
     local_dir_es = ensure_endslash(local_dir)
+    cvsignore = Path("~/.cvsignore").expanduser()
 
     cmd = f"""
         rsync
@@ -106,6 +109,7 @@ def rsync_push(remote_dir: RemotePath, local_dir: Path):
             --delete
             --exclude='.git/'
             --filter=':- .gitignore'
+            --filter=':- {cvsignore}'
             '{local_dir_es}'
             '{remote_dir_es}'
         """
